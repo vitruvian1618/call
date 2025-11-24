@@ -4,6 +4,7 @@ export type Question = {
   code: string;
   options?: { code: string; label: string }[];
   audio_url?: string;
+  tts_error?: string;
 };
 
 export type Interview = {

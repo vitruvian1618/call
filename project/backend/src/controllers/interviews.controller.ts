@@ -15,9 +15,19 @@ const activeInterviews = new Map<string, Interview>();
 const questionWithAudio = async (questionId: string) => {
   const question = getQuestionById(questionId);
   if (!question) throw new HttpError(404, 'Question not found');
-  const audioBuffer = await synthesizeSpeech(question.text);
-  const audioUrl = `data:audio/mpeg;base64,${audioBuffer.toString('base64')}`;
-  return { ...question, audio_url: audioUrl };
+
+  let audioUrl: string | undefined;
+  let ttsError: string | undefined;
+
+  try {
+    const audioBuffer = await synthesizeSpeech(question.text);
+    audioUrl = `data:audio/mpeg;base64,${audioBuffer.toString('base64')}`;
+  } catch (err) {
+    ttsError = err instanceof Error ? err.message : 'TTS synthesis failed';
+    logger.warn('TTS synthesis failed', err);
+  }
+
+  return { ...question, audio_url: audioUrl, tts_error: ttsError };
 };
 
 export const startInterview = asyncHandler(async (_req: Request, res: Response) => {
