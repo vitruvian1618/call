@@ -45,3 +45,8 @@ button:disabled {
 .error {
   color: #dc2626;
 }
+
+.warning {
+  color: #b45309;
+  font-size: 0.95rem;
+}

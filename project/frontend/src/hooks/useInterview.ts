@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { useCallback, useState } from 'react';
 import { startInterview, sendAnswer } from '../services/api.service';
 import { AnswerResponse, Interview, Question } from '../types';
@@ -19,7 +20,11 @@ export const useInterview = () => {
       setCurrentQuestion(data.question);
       await playAudio(data.question.audio_url);
     } catch (err) {
-      setError('Intervju se ni mogel začeti.');
+      const message =
+        axios.isAxiosError(err) && err.response?.data?.error
+          ? err.response.data.error
+          : 'Intervju se ni mogel začeti.';
+      setError(message);
     } finally {
       setLoading(false);
     }
@@ -40,7 +45,11 @@ export const useInterview = () => {
           await playAudio(response.nextQuestion.audio_url);
         }
       } catch (err) {
-        setError('Oddaja odgovora ni uspela.');
+        const message =
+          axios.isAxiosError(err) && err.response?.data?.error
+            ? err.response.data.error
+            : 'Oddaja odgovora ni uspela.';
+        setError(message);
       } finally {
         setLoading(false);
       }

@@ -28,8 +28,10 @@ npm install
 npm run dev
 ```
 
+> If you previously installed dependencies with the old `ts-node-dev` runner, delete `backend/node_modules` and reinstall so `npm run dev` uses the ESM loader (`node --watch --loader ts-node/esm src/index.ts`).
+
 ### API endpoints
-- `POST /api/interviews/start` – begin an interview, returns interview ID and first question with pre-generated TTS audio URL.
+- `POST /api/interviews/start` – begin an interview, returns interview ID and first question with pre-generated TTS audio URL (falls back gracefully with a warning if TTS is unavailable).
 - `POST /api/interviews/:id/answer` – submit a single `audio` file (FormData) and `questionId`; returns transcript, mapped codes, and next question (with TTS) or completion status.
 - `POST /api/tts` – synthesize arbitrary text to audio/mpeg.
 - `POST /api/stt` – debug endpoint to transcribe a single `audio` upload.
